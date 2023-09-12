@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  test_pull_request:
+  test_push:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: 17
+          distribution: 'adopt'
 
       - name: Build and Test
         run: mvn test
