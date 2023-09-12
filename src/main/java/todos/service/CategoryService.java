@@ -29,8 +29,7 @@ public class CategoryService {
     }
 
     public Category createCategory(Category newCategory) {
-//        Category category = new Category(newCategory.getName());
-        Category category = new Category("Name");
+        Category category = new Category(newCategory.getName());
         return categoryRepository.insert(category);
     }
 
