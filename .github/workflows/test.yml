@@ -1,0 +1,21 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  test_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ceckout Code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: 17
+
+      - name: Build and Test
+        run: mvn test
