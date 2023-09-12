@@ -20,7 +20,7 @@ public class CategoryService {
     public List<Category> getAllCategories(String name) {
         List<Category> categories = new ArrayList<>();
         if (name != null) categories.addAll(categoryRepository.findAllByNameContainingIgnoreCase(name));
-//        else categories.addAll(categoryRepository.findAll());
+        else categories.addAll(categoryRepository.findAll());
         return categories;
     }
 
@@ -29,7 +29,8 @@ public class CategoryService {
     }
 
     public Category createCategory(Category newCategory) {
-        Category category = new Category(newCategory.getName());
+//        Category category = new Category(newCategory.getName());
+        Category category = new Category("Name");
         return categoryRepository.insert(category);
     }
 
