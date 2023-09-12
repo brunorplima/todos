@@ -9,7 +9,7 @@ jobs:
   test_pull_request:
     runs-on: ubuntu-latest
     steps:
-      - name: Ceckout Code
+      - name: Checkout Code
         uses: actions/checkout@v2
 
       - name: Set up JDK 17
