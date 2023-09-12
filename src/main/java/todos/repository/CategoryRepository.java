@@ -6,5 +6,5 @@ import todos.model.Category;
 import java.util.List;
 
 public interface CategoryRepository extends MongoRepository<Category, String> {
-    public List<Category> findAllByNameContainingIgnoreCase(String name);
+    List<Category> findAllByNameContainingIgnoreCase(String name);
 }
