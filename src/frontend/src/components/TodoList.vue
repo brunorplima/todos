@@ -1,16 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { getAllTodos } from "../api/todos.js";
-import Todo from "../entities/Todo.js";
 import TodoCard from "./TodoCard.vue";
 
 const todos = ref([])
 
 onMounted(() => {
-  async function fetchData() {
-    const data = await getAllTodos()
-    todos.value = Todo.getList(data)
-  }
+  const fetchData = async () => todos.value = await getAllTodos()
   fetchData()
 })
 </script>
