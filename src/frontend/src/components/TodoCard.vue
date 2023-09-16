@@ -9,9 +9,13 @@ const emits = defineEmits(['updateTodo'])
 const updatingTodo = ref(null)
 
 async function update() {
-  const data = await updateTodo(updatingTodo.value)
-  emits('updateTodo', data)
-  updatingTodo.value = null
+  try {
+    const data = await updateTodo(updatingTodo.value)
+    emits('updateTodo', data)
+    updatingTodo.value = null
+  } catch (e) {
+    console.error(e)
+  }
 }
 </script>
 
