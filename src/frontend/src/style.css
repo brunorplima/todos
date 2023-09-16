@@ -25,6 +25,10 @@ a:hover {
   cursor: pointer;
 }
 
+.custom-label {
+  font-size: 10pt;
+}
+
 body {
   margin: 0;
   min-width: 320px;

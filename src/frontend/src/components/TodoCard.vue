@@ -1,51 +1,51 @@
 <script setup>
 import { ref } from "vue";
+import TodoInfo from "./TodoInfo.vue";
+import TodoEdit from "./TodoEdit.vue";
+import { updateTodo } from "../api/todos.js";
 
 const { todo } = defineProps(['todo'])
-const open = ref(false)
+const emits = defineEmits(['updateTodo'])
+const updatingTodo = ref(null)
+
+async function update() {
+  try {
+    const data = await updateTodo(updatingTodo.value)
+    emits('updateTodo', data)
+    updatingTodo.value = null
+  } catch (e) {
+    console.error(e)
+  }
+}
 </script>
 
 <template>
   <div class="card-body d-flex gap-2">
     <div class="">
-      <input class="form-check-input" type="checkbox" :id="`todo-${todo.id}`">
+      <input v-if="!updatingTodo" class="form-check-input" type="checkbox" :id="`todo-${todo.id}`">
     </div>
 
-    <div class="flex-grow-1 user-select-none" @click="open = !open">
-      <div id="todoTitle" class="d-flex gap-2">
-        <h6 class="form-check-label card-title">{{ todo.title }}</h6>
-        <fa-icon v-if="open" icon="chevron-up" size="2xs" class="chevron-icon" />
-        <fa-icon v-else icon="chevron-down" size="2xs" class="chevron-icon" />
-      </div>
-      <div v-if="open">
-        {{ todo.description }}
-      </div>
-    </div>
+    <TodoInfo v-if="!updatingTodo" :todo="todo" />
+    <TodoEdit v-else :updatingTodo="updatingTodo" />
 
     <div>
-      <fa-icon icon="pen" class="pen-icon" />
+      <fa-icon v-if="!updatingTodo" icon="pen" class="controller-icon" @click="updatingTodo = { ...todo }" />
+      <div v-else class="d-flex flex-column">
+        <fa-icon icon="xmark" class="controller-icon" @click="updatingTodo = null" size="lg" />
+        <fa-icon icon="floppy-disk" class="controller-icon" @click="update" />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-#todoTitle {
-  cursor: pointer;
-  transition: .3s;
-}
-#todoTitle:hover {
-  color: var(--blue);
-}
-.pen-icon {
+.controller-icon {
   color: var(--blue);
   padding: 6px;
   cursor: pointer;
   transition: .3s;
 }
-.pen-icon:hover {
+.controller-icon:hover {
   color: var(--blue-light);
-}
-.chevron-icon {
-  transform: translateY(5px);
 }
 </style>
