@@ -14,12 +14,12 @@ export default {
         return await res.json()
     },
     post: async (url, body) => {
-        const options = getOptions('POST', body)
+        const options = getOptions('POST', JSON.stringify(body))
         const res = await fetch(url, options)
         return await res.json()
     },
     put: async (url, body) => {
-        const options = getOptions('PUT', body)
+        const options = getOptions('PUT', JSON.stringify(body))
         const res = await fetch(url, options)
         return await res.json()
     },
