@@ -9,6 +9,13 @@ onMounted(() => {
   const fetchData = async () => todos.value = await getAllTodos()
   fetchData()
 })
+
+function applyChangesToTodo(data) {
+  todos.value = todos.value.map(t => {
+    if (t.id === data.id) return data
+    return t
+  })
+}
 </script>
 
 <template>
@@ -20,7 +27,7 @@ onMounted(() => {
         class="card w-100"
         :class="index !== todos.length - 1 && 'mb-3'"
       >
-        <TodoCard :todo="todo" />
+        <TodoCard :todo="todo" @updateTodo="applyChangesToTodo" />
       </li>
     </ul>
   </div>
