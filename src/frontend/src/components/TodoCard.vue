@@ -29,10 +29,10 @@ async function update() {
     <TodoEdit v-else :updatingTodo="updatingTodo" />
 
     <div>
-      <fa-icon v-if="!updatingTodo" icon="pen" class="controller-icon" @click="updatingTodo = { ...todo }" />
+      <font-awesome-icon v-if="!updatingTodo" icon="pen" class="controller-icon" @click="updatingTodo = { ...todo }" />
       <div v-else class="d-flex flex-column">
-        <fa-icon icon="xmark" class="controller-icon" @click="updatingTodo = null" size="lg" />
-        <fa-icon icon="floppy-disk" class="controller-icon" @click="update" />
+        <font-awesome-icon icon="xmark" class="controller-icon" @click="updatingTodo = null" size="lg" />
+        <font-awesome-icon icon="floppy-disk" class="controller-icon" @click="update" />
       </div>
     </div>
   </div>
