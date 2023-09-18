@@ -8,7 +8,6 @@ import TodoCardControllers from "./TodoCardControllers.vue";
 const { todo } = defineProps(['todo'])
 const emits = defineEmits(['updateTodo', 'deleteTodo'])
 const updatingTodo = ref(null)
-const showDialog = ref(true)
 
 async function update() {
   try {
@@ -49,7 +48,6 @@ async function removeTodo(id) {
 
     <TodoCardControllers
       id="delete-dialog"
-      :show="showDialog"
       :updatingTodo="updatingTodo"
       :todoId="todo.id"
       @openEdit="openEditTodo"
