@@ -10,11 +10,15 @@ onMounted(() => {
   fetchData()
 })
 
-function applyChangesToTodo(data) {
+function applyUpdateChangesToTodo(data) {
   todos.value = todos.value.map(t => {
     if (t.id === data.id) return data
     return t
   })
+}
+
+function applyDeleteChangesToTodos(id) {
+  todos.value = todos.value.filter(t => t.id !== id)
 }
 </script>
 
@@ -27,7 +31,11 @@ function applyChangesToTodo(data) {
         class="card w-100"
         :class="index !== todos.length - 1 && 'mb-3'"
       >
-        <TodoCard :todo="todo" @updateTodo="applyChangesToTodo" />
+        <TodoCard
+          :todo="todo"
+          @updateTodo="applyUpdateChangesToTodo"
+          @deleteTodo="applyDeleteChangesToTodos"
+        />
       </li>
     </ul>
   </div>

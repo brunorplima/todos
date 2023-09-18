@@ -2,17 +2,36 @@
 import { ref } from "vue";
 import TodoInfo from "./TodoInfo.vue";
 import TodoEdit from "./TodoEdit.vue";
-import { updateTodo } from "../api/todos.js";
+import { deleteTodo, updateTodo } from "../api/todos.js";
+import TodoCardControllers from "./TodoCardControllers.vue";
 
 const { todo } = defineProps(['todo'])
-const emits = defineEmits(['updateTodo'])
+const emits = defineEmits(['updateTodo', 'deleteTodo'])
 const updatingTodo = ref(null)
+const showDialog = ref(true)
 
 async function update() {
   try {
     const data = await updateTodo(updatingTodo.value)
     emits('updateTodo', data)
     updatingTodo.value = null
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+function openEditTodo() {
+  updatingTodo.value = { ...todo }
+}
+
+function closeEditTodo() {
+  updatingTodo.value = null
+}
+
+async function removeTodo(id) {
+  try {
+    await deleteTodo(id)
+    emits('deleteTodo', id)
   } catch (e) {
     console.error(e)
   }
@@ -28,24 +47,15 @@ async function update() {
     <TodoInfo v-if="!updatingTodo" :todo="todo" />
     <TodoEdit v-else :updatingTodo="updatingTodo" />
 
-    <div>
-      <font-awesome-icon v-if="!updatingTodo" icon="pen" class="controller-icon" @click="updatingTodo = { ...todo }" />
-      <div v-else class="d-flex flex-column">
-        <font-awesome-icon icon="xmark" class="controller-icon" @click="updatingTodo = null" size="lg" />
-        <font-awesome-icon icon="floppy-disk" class="controller-icon" @click="update" />
-      </div>
-    </div>
+    <TodoCardControllers
+      id="delete-dialog"
+      :show="showDialog"
+      :updatingTodo="updatingTodo"
+      :todoId="todo.id"
+      @openEdit="openEditTodo"
+      @closeEdit="closeEditTodo"
+      @delete="removeTodo"
+      @update="update"
+    />
   </div>
 </template>
-
-<style scoped>
-.controller-icon {
-  color: var(--blue);
-  padding: 6px;
-  cursor: pointer;
-  transition: .3s;
-}
-.controller-icon:hover {
-  color: var(--blue-light);
-}
-</style>
