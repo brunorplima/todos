@@ -17,6 +17,6 @@ function changeValue() {
 <template>
   <div class="form-group">
     <label :for="id" class="custom-label">{{ label }}</label>
-    <input :id="id" class="form-control" type="text" v-model="inputValue" @change="changeValue" />
+    <input :id="id" class="form-control" type="text" v-model="inputValue" @input="changeValue" />
   </div>
 </template>
