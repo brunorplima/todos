@@ -25,7 +25,6 @@ export default {
     },
     delete: async (url) => {
         const options = getOptions('DELETE')
-        const res = await fetch(url, options)
-        return await res.json()
+        await fetch(url, options)
     }
 }
