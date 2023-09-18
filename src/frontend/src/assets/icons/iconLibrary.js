@@ -6,6 +6,7 @@ import { faChevronUp } from "@fortawesome/free-solid-svg-icons/faChevronUp";
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons/faFloppyDisk";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
+import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
 
 const icons = [
   faPen,
@@ -13,7 +14,8 @@ const icons = [
   faChevronDown,
   faFloppyDisk,
   faXmark,
-  faPlus
+  faPlus,
+  faTrash
 ]
 
 const startIconLibrary = () => {
