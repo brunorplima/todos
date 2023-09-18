@@ -5,20 +5,22 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons/faChevronDown";
 import { faChevronUp } from "@fortawesome/free-solid-svg-icons/faChevronUp";
 import { faFloppyDisk } from "@fortawesome/free-solid-svg-icons/faFloppyDisk";
 import { faXmark } from "@fortawesome/free-solid-svg-icons/faXmark";
+import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
 const icons = [
   faPen,
   faChevronUp,
   faChevronDown,
   faFloppyDisk,
-  faXmark
+  faXmark,
+  faPlus
 ]
 
 const startIconLibrary = () => {
   icons.forEach(icon => library.add(icon))
 
   return {
-    componentName: 'fa-icon',
+    componentName: 'font-awesome-icon',
     FontAwesomeIcon
   }
 }
