@@ -23,10 +23,9 @@ public class TodoService {
     }
 
     public List<TodoDTO> getAllTodos(String title) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "created");
         List<Todo> todos = new ArrayList<>();
         if (title != null) todos.addAll(todoRepository.findByTitleContainingIgnoreCaseOrderByCreatedDesc(title));
-        else todos.addAll(todoRepository.findAll(sort));
+        else todos.addAll(getAllTodosOrderByCreatedDesc());
         return todos.stream().map(this::convertToDTO).toList();
     }
 
@@ -63,5 +62,10 @@ public class TodoService {
 
     private TodoDTO convertToDTO(Todo todo) {
         return modelMapper.map(todo, TodoDTO.class);
+    }
+
+    private List<Todo> getAllTodosOrderByCreatedDesc() {
+        Sort sort = Sort.by(Sort.Direction.DESC, "created");
+        return todoRepository.findAll(sort);
     }
 }
