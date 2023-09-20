@@ -15,16 +15,16 @@ class TodoRepositoryTest {
     @Autowired
     private TodoRepository repository;
 
-    private final String TITLE1 = "Interesting Title", TITLE2 = "Weird Title";
-    private final String DESCRIPTION1 = "Interesting description", DESCRIPTION2 = "Weird description";
+    private final String READ_TITLE = "Read", READ_DESCRIPTION = "Read a book";
+    private final String STUDY_TITLE = "Study", STUDY_DESCRIPTION = "Study for the exam";
 
     @BeforeEach
     void beforeEach() {
-        Todo todo1 = new Todo(TITLE1, DESCRIPTION1);
-        todo1.setCompleted(true);
-        Todo todo2 = new Todo(TITLE2, DESCRIPTION2);
-        repository.save(todo1);
-        repository.save(todo2);
+        Todo readTodo = new Todo(READ_TITLE, READ_DESCRIPTION);
+        readTodo.setCompleted(true);
+        Todo studyTodo = new Todo(STUDY_TITLE, STUDY_DESCRIPTION);
+        repository.save(readTodo);
+        repository.save(studyTodo);
     }
 
     @AfterEach
@@ -37,12 +37,12 @@ class TodoRepositoryTest {
             + "then it returns expected amount of todos")
     @Test
     void itShouldFindExpectedTodoAmount() {
-        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("INTERESTING");
-        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("WEIRD");
-        List<Todo> both = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("TITLE");
+        List<Todo> onlyReadTodo = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("rE");
+        List<Todo> onlyStudyTodo = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("sTU");
+        List<Todo> both = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("D");
 
-        assertEquals(1, onlyTodo1.size());
-        assertEquals(1, onlyTodo2.size());
+        assertEquals(1, onlyReadTodo.size());
+        assertEquals(1, onlyStudyTodo.size());
         assertEquals(2, both.size());
     }
 
@@ -52,22 +52,22 @@ class TodoRepositoryTest {
             + "then it returns the expected data")
     @Test
     void itShouldFindExpectedTodoData() {
-        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("INTERESTING");
-        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("WEIRD");
+        List<Todo> onlyReadTodo = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("READ");
+        List<Todo> onlyStudyTodo = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("STUDY");
 
-        assertEquals(1, onlyTodo1.size());
-        assertEquals(1, onlyTodo2.size());
+        assertEquals(1, onlyReadTodo.size());
+        assertEquals(1, onlyStudyTodo.size());
 
-        Todo todo1 = onlyTodo1.get(0);
-        Todo todo2 = onlyTodo2.get(0);
+        Todo readTodo = onlyReadTodo.get(0);
+        Todo studyTodo = onlyStudyTodo.get(0);
 
-        assertEquals(TITLE1, todo1.getTitle());
-        assertEquals(TITLE2, todo2.getTitle());
+        assertEquals(READ_TITLE, readTodo.getTitle());
+        assertEquals(STUDY_TITLE, studyTodo.getTitle());
 
-        assertEquals(DESCRIPTION1, todo1.getDescription());
-        assertEquals(DESCRIPTION2, todo2.getDescription());
+        assertEquals(READ_DESCRIPTION, readTodo.getDescription());
+        assertEquals(STUDY_DESCRIPTION, studyTodo.getDescription());
 
-        assertTrue(todo1.isCompleted());
-        assertFalse(todo2.isCompleted());
+        assertTrue(readTodo.isCompleted());
+        assertFalse(studyTodo.isCompleted());
     }
 }
