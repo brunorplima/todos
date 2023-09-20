@@ -16,18 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TodoServiceTest {
-
-    @Autowired
-    private TodoService todoService;
-    @Autowired
-    private TodoRepository todoRepository;
-
+    private final TodoService todoService;
+    private final TodoRepository todoRepository;
     private final String GIVEN = "given saved todos ";
     private final String TITLE1 = "First todo", DESCRIPTION1 = "task for Monday";
     private final String TITLE2 = "Second task", DESCRIPTION2 = "task for Tuesday";
     private final String TITLE3 = "Third activity", DESCRIPTION3 = "task for Wednesday";
-
     private String todoId1, todoId2, todoId3;
+
+    @Autowired
+    public TodoServiceTest(TodoService todoService, TodoRepository todoRepository) {
+        this.todoService = todoService;
+        this.todoRepository = todoRepository;
+    }
 
     @BeforeEach
     public void beforeEach() {
