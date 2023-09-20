@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import todos.dto.CategoryDTO;
 import todos.model.Category;
 import todos.service.CategoryService;
 import todos.util.Constants;
@@ -18,26 +19,26 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories(@RequestParam String name) {
-        List<Category> categories = categoryService.getAllCategories(name);
+    public ResponseEntity<List<CategoryDTO>> getAllCategories(@RequestParam(required = false) String name) {
+        List<CategoryDTO> categories = categoryService.getAllCategories(name);
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategory(@PathVariable String id) {
-        Category category = categoryService.getCategory(id);
+    public ResponseEntity<CategoryDTO> getCategory(@PathVariable String id) {
+        CategoryDTO category = categoryService.getCategory(id);
         if (category == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(category, HttpStatus.FOUND);
     }
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category newCategory) {
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody Category newCategory) {
         return new ResponseEntity<>(categoryService.createCategory(newCategory), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody Category _category) {
-        Category category = categoryService.updateCategory(id, _category);
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable String id, @RequestBody Category _category) {
+        CategoryDTO category = categoryService.updateCategory(id, _category);
         if (category == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else return new ResponseEntity<>(category, HttpStatus.OK);
     }

@@ -1,7 +1,9 @@
 package todos.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import todos.dto.TodoDTO;
 import todos.model.Todo;
 import todos.repository.TodoRepository;
 
@@ -11,35 +13,39 @@ import java.util.List;
 @Service
 public class TodoService {
     private final TodoRepository todoRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public TodoService(TodoRepository repository) {
+    public TodoService(TodoRepository repository, ModelMapper modelMapper) {
         this.todoRepository = repository;
+        this.modelMapper = modelMapper;
     }
 
-    public List<Todo> getAllTodos(String title) {
+    public List<TodoDTO> getAllTodos(String title) {
         List<Todo> todos = new ArrayList<>();
         if (title != null) todos.addAll(todoRepository.findByTitleContainingIgnoreCase(title));
         else todos.addAll(todoRepository.findAll());
-        return todos;
+        return todos.stream().map(this::convertToDTO).toList();
     }
 
-    public Todo getTodo(String id) {
-        return todoRepository.findById(id).orElse(null);
+    public TodoDTO getTodo(String id) {
+        Todo todo = todoRepository.findById(id).orElse(null);
+        if (todo != null) return convertToDTO(todo);
+        return null;
     }
 
-    public Todo createTodo(Todo newTodo) {
+    public TodoDTO createTodo(Todo newTodo) {
         Todo todo = new Todo(newTodo.getTitle(), newTodo.getDescription());
-        return todoRepository.insert(todo);
+        return convertToDTO(todoRepository.insert(todo));
     }
 
-    public Todo updateTodo(String id, Todo newTodo) {
+    public TodoDTO updateTodo(String id, Todo newTodo) {
         Todo todo = todoRepository.findById(id).orElse(null);
         if (todo == null) return null;
         todo.setTitle(newTodo.getTitle());
         todo.setDescription(newTodo.getDescription());
         todo.setCompleted(newTodo.isCompleted());
-        return todoRepository.save(todo);
+        return convertToDTO(todoRepository.save(todo));
     }
 
     public void deleteAllTodos() {
@@ -51,5 +57,9 @@ public class TodoService {
         if (todo == null) return false;
         todoRepository.delete(todo);
         return true;
+    }
+
+    private TodoDTO convertToDTO(Todo todo) {
+        return modelMapper.map(todo, TodoDTO.class);
     }
 }

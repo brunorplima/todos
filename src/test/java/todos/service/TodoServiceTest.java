@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import todos.dto.TodoDTO;
 import todos.model.Todo;
 import todos.repository.TodoRepository;
 
@@ -15,18 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class TodoServiceTest {
-
-    @Autowired
-    private TodoService todoService;
-    @Autowired
-    private TodoRepository todoRepository;
-
+    private final TodoService todoService;
+    private final TodoRepository todoRepository;
     private final String GIVEN = "given saved todos ";
     private final String TITLE1 = "First todo", DESCRIPTION1 = "task for Monday";
     private final String TITLE2 = "Second task", DESCRIPTION2 = "task for Tuesday";
     private final String TITLE3 = "Third activity", DESCRIPTION3 = "task for Wednesday";
-
     private String todoId1, todoId2, todoId3;
+
+    @Autowired
+    public TodoServiceTest(TodoService todoService, TodoRepository todoRepository) {
+        this.todoService = todoService;
+        this.todoRepository = todoRepository;
+    }
 
     @BeforeEach
     public void beforeEach() {
@@ -49,10 +51,10 @@ class TodoServiceTest {
         + "then all todos should return")
     @Test
     void getAllTodosTest() {
-        List<Todo> todos = todoService.getAllTodos(null);
-        Todo firstTodo = todos.get(0);
-        Todo secondTodo = todos.get(1);
-        Todo thirdTodo = todos.get(2);
+        List<TodoDTO> todos = todoService.getAllTodos(null);
+        TodoDTO firstTodo = todos.get(0);
+        TodoDTO secondTodo = todos.get(1);
+        TodoDTO thirdTodo = todos.get(2);
 
         assertEquals(3, todos.size());
 
@@ -74,16 +76,16 @@ class TodoServiceTest {
             + "then all matches should return")
     @Test
     void getAllTodosWithTitleTest() {
-        List<Todo> todos = todoService.getAllTodos("ToDo");
-        Todo firstTodo = todos.get(0);
+        List<TodoDTO> todos = todoService.getAllTodos("ToDo");
+        TodoDTO firstTodo = todos.get(0);
 
         assertEquals(1, todos.size());
         assertEquals(TITLE1, firstTodo.getTitle());
         assertEquals(DESCRIPTION1, firstTodo.getDescription());
 
         todos = todoService.getAllTodos("A");
-        Todo secondTodo = todos.get(0);
-        Todo thirdTodo = todos.get(1);
+        TodoDTO secondTodo = todos.get(0);
+        TodoDTO thirdTodo = todos.get(1);
 
         assertEquals(2, todos.size());
         assertEquals(TITLE2, secondTodo.getTitle());
@@ -101,10 +103,10 @@ class TodoServiceTest {
         + "then its data should return or null if not existent")
     @Test
     void getTodoTest() {
-        Todo firstTodo = todoService.getTodo(todoId1);
-        Todo secondTodo = todoService.getTodo(todoId2);
-        Todo thirdTodo = todoService.getTodo(todoId3);
-        Todo todoNull = todoService.getTodo("not an id");
+        TodoDTO firstTodo = todoService.getTodo(todoId1);
+        TodoDTO secondTodo = todoService.getTodo(todoId2);
+        TodoDTO thirdTodo = todoService.getTodo(todoId3);
+        TodoDTO todoNull = todoService.getTodo("not an id");
 
         assertEquals(todoId1, firstTodo.getId());
         assertEquals(TITLE1, firstTodo.getTitle());
@@ -127,7 +129,7 @@ class TodoServiceTest {
         long count = todoRepository.count();
         assertEquals(3, count);
 
-        Todo todo = todoService.createTodo(new Todo(title, description));
+        TodoDTO todo = todoService.createTodo(new Todo(title, description));
         count = todoRepository.count();
 
         assertEquals(4, count);
@@ -143,7 +145,7 @@ class TodoServiceTest {
     void updateTodoTest() {
         String title = "Changed first title", description = "Changed first description";
         Todo body = new Todo(title, description);
-        Todo todo = todoService.updateTodo("Not an id", body);
+        TodoDTO todo = todoService.updateTodo("Not an id", body);
 
         assertNull(todo);
 
@@ -184,7 +186,7 @@ class TodoServiceTest {
         assertTrue(deleted);
         assertEquals(2, count);
 
-        Todo deletedTodo = todoService.getTodo(todoId1);
+        TodoDTO deletedTodo = todoService.getTodo(todoId1);
         assertNull(deletedTodo);
     }
 }

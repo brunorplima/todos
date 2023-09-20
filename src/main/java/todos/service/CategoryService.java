@@ -1,7 +1,9 @@
 package todos.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import todos.dto.CategoryDTO;
 import todos.model.Category;
 import todos.repository.CategoryRepository;
 
@@ -11,33 +13,37 @@ import java.util.List;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public CategoryService(CategoryRepository repository) {
+    public CategoryService(CategoryRepository repository, ModelMapper modelMapper) {
         this.categoryRepository = repository;
+        this.modelMapper = modelMapper;
     }
 
-    public List<Category> getAllCategories(String name) {
+    public List<CategoryDTO> getAllCategories(String name) {
         List<Category> categories = new ArrayList<>();
         if (name != null) categories.addAll(categoryRepository.findAllByNameContainingIgnoreCase(name));
         else categories.addAll(categoryRepository.findAll());
-        return categories;
+        return categories.stream().map(this::convertToDTO).toList();
     }
 
-    public Category getCategory(String id) {
-        return categoryRepository.findById(id).orElse(null);
+    public CategoryDTO getCategory(String id) {
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category != null) return convertToDTO(category);
+        return null;
     }
 
-    public Category createCategory(Category newCategory) {
+    public CategoryDTO createCategory(Category newCategory) {
         Category category = new Category(newCategory.getName());
-        return categoryRepository.insert(category);
+        return convertToDTO(categoryRepository.insert(category));
     }
 
-    public Category updateCategory(String id, Category updatedCategory) {
+    public CategoryDTO updateCategory(String id, Category updatedCategory) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) return null;
         category.setName(updatedCategory.getName());
-        return categoryRepository.save(category);
+        return convertToDTO(categoryRepository.save(category));
     }
 
     public void deleteAllCategories() {
@@ -49,5 +55,9 @@ public class CategoryService {
         if (category == null) return false;
         categoryRepository.delete(category);
         return true;
+    }
+
+    private CategoryDTO convertToDTO(Category category) {
+        return modelMapper.map(category, CategoryDTO.class);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import todos.dto.TodoDTO;
 import todos.model.Todo;
 import todos.service.TodoService;
 import todos.util.Constants;
@@ -18,26 +19,26 @@ public class TodoController {
     private TodoService todoService;
 
     @GetMapping
-    public ResponseEntity<List<Todo>> getAllTodos(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<TodoDTO>> getAllTodos(@RequestParam(required = false) String title) {
         return new ResponseEntity<>(todoService.getAllTodos(title), HttpStatus.FOUND);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Todo> getTodo(@PathVariable String id) {
-        Todo todo = todoService.getTodo(id);
+    public ResponseEntity<TodoDTO> getTodo(@PathVariable String id) {
+        TodoDTO todo = todoService.getTodo(id);
         if (todo != null) return new ResponseEntity<>(todo, HttpStatus.FOUND);
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo newTodo) {
-        Todo todo = todoService.createTodo(newTodo);
+    public ResponseEntity<TodoDTO> createTodo(@RequestBody Todo newTodo) {
+        TodoDTO todo = todoService.createTodo(newTodo);
         return new ResponseEntity<>(todo, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable String id, @RequestBody Todo newTodo) {
-        Todo todo = todoService.updateTodo(id, newTodo);
+    public ResponseEntity<TodoDTO> updateTodo(@PathVariable String id, @RequestBody Todo newTodo) {
+        TodoDTO todo = todoService.updateTodo(id, newTodo);
         if (todo != null) return new ResponseEntity<>(todo, HttpStatus.ACCEPTED);
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
