@@ -1,11 +1,11 @@
 package todos.service;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import todos.dto.CategoryDTO;
 import todos.model.Category;
 import todos.repository.CategoryRepository;
 
@@ -15,18 +15,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CategoryServiceTest {
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private CategoryRepository categoryRepository;
-
+    private final CategoryService categoryService;
+    private final CategoryRepository categoryRepository;
     private final String GIVEN = "given saved categories ";
-
     private final String NAME1 = "Working", NAME2 = "Gardening";
-    private String id1, id2;
+    private final String id1, id2;
 
-    @BeforeEach
-    void beforeEach() {
+    @Autowired
+    public CategoryServiceTest(CategoryService categoryService, CategoryRepository categoryRepository) {
+        this.categoryService = categoryService;
+        this.categoryRepository = categoryRepository;
         id1 = categoryRepository.save(new Category(NAME1)).getId();
         id2 = categoryRepository.save(new Category(NAME2)).getId();
     }
@@ -41,9 +39,9 @@ class CategoryServiceTest {
             + "then all categories should return")
     @Test
     void getAllCategoriesTest() {
-        List<Category> categories = categoryService.getAllCategories(null);
-        Category workCategory = categories.get(0);
-        Category gardenCategory = categories.get(1);
+        List<CategoryDTO> categories = categoryService.getAllCategories(null);
+        CategoryDTO workCategory = categories.get(0);
+        CategoryDTO gardenCategory = categories.get(1);
 
         assertEquals(2, categories.size());
         assertEquals(NAME1, workCategory.getName());
@@ -55,8 +53,8 @@ class CategoryServiceTest {
             + "then all matches should return")
     @Test
     void getAllCategoriesWithNameTest() {
-        Category workCategory, gardenCategory;
-        List<Category> categories = categoryService.getAllCategories("no match");
+        CategoryDTO workCategory, gardenCategory;
+        List<CategoryDTO> categories = categoryService.getAllCategories("no match");
         assertEquals(0, categories.size());
 
         categories = categoryService.getAllCategories(NAME1);
@@ -77,9 +75,9 @@ class CategoryServiceTest {
             + "then its data should return or null if not existent")
     @Test
     void getCategoryTest() {
-        Category workCategory = categoryService.getCategory(id1);
-        Category gardenCategory = categoryService.getCategory(id2);
-        Category categoryNull = categoryService.getCategory("not an id");
+        CategoryDTO workCategory = categoryService.getCategory(id1);
+        CategoryDTO gardenCategory = categoryService.getCategory(id2);
+        CategoryDTO categoryNull = categoryService.getCategory("not an id");
 
         assertEquals(id1, workCategory.getId());
         assertEquals(NAME1, workCategory.getName());
@@ -99,7 +97,7 @@ class CategoryServiceTest {
         long count = categoryRepository.count();
         assertEquals(2, count);
 
-        Category homeCategory = categoryService.createCategory(new Category(name));
+        CategoryDTO homeCategory = categoryService.createCategory(new Category(name));
         count = categoryRepository.count();
 
         assertEquals(3, count);
@@ -114,7 +112,7 @@ class CategoryServiceTest {
     void updateCategory() {
         String name = "Groceries";
         Category body = new Category(name);
-        Category category = categoryService.updateCategory("not an id", body);
+        CategoryDTO category = categoryService.updateCategory("not an id", body);
 
         assertNull(category);
 
@@ -155,7 +153,7 @@ class CategoryServiceTest {
         assertTrue(deleted);
         assertEquals(1, count);
 
-        Category deletedTodo = categoryService.getCategory(id1);
+        CategoryDTO deletedTodo = categoryService.getCategory(id1);
         assertNull(deletedTodo);
     }
 }
