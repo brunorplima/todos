@@ -2,6 +2,7 @@ package todos.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import todos.dto.TodoDTO;
 import todos.model.Todo;
@@ -22,9 +23,10 @@ public class TodoService {
     }
 
     public List<TodoDTO> getAllTodos(String title) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "created");
         List<Todo> todos = new ArrayList<>();
-        if (title != null) todos.addAll(todoRepository.findByTitleContainingIgnoreCase(title));
-        else todos.addAll(todoRepository.findAll());
+        if (title != null) todos.addAll(todoRepository.findByTitleContainingIgnoreCaseOrderByCreatedDesc(title));
+        else todos.addAll(todoRepository.findAll(sort));
         return todos.stream().map(this::convertToDTO).toList();
     }
 

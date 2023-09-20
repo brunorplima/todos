@@ -6,5 +6,5 @@ import todos.model.Todo;
 import java.util.List;
 
 public interface TodoRepository extends MongoRepository<Todo, String> {
-    List<Todo> findByTitleContainingIgnoreCase(String title);
+    List<Todo> findByTitleContainingIgnoreCaseOrderByCreatedDesc(String title);
 }

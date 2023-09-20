@@ -37,9 +37,9 @@ class TodoRepositoryTest {
             + "then it returns expected amount of todos")
     @Test
     void itShouldFindExpectedTodoAmount() {
-        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCase("INTERESTING");
-        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCase("WEIRD");
-        List<Todo> both = repository.findByTitleContainingIgnoreCase("TITLE");
+        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("INTERESTING");
+        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("WEIRD");
+        List<Todo> both = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("TITLE");
 
         assertEquals(1, onlyTodo1.size());
         assertEquals(1, onlyTodo2.size());
@@ -52,8 +52,8 @@ class TodoRepositoryTest {
             + "then it returns the expected data")
     @Test
     void itShouldFindExpectedTodoData() {
-        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCase("INTERESTING");
-        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCase("WEIRD");
+        List<Todo> onlyTodo1 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("INTERESTING");
+        List<Todo> onlyTodo2 = repository.findByTitleContainingIgnoreCaseOrderByCreatedDesc("WEIRD");
 
         assertEquals(1, onlyTodo1.size());
         assertEquals(1, onlyTodo2.size());
