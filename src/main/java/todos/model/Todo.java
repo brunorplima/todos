@@ -1,9 +1,11 @@
 package todos.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.Instant;
 
@@ -15,6 +17,10 @@ public class Todo {
     private boolean completed;
     @CreatedDate private Instant created;
     @LastModifiedDate private Instant lastModified;
+
+    @DocumentReference
+    @JsonIgnore
+    private Category category;
 
     public Todo() {
     }
@@ -51,6 +57,14 @@ public class Todo {
 
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Instant getCreated() {
