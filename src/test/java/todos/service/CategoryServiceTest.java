@@ -1,6 +1,7 @@
 package todos.service;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,16 @@ class CategoryServiceTest {
     private final CategoryRepository categoryRepository;
     private final String GIVEN = "given saved categories ";
     private final String NAME1 = "Working", NAME2 = "Gardening";
-    private final String id1, id2;
+    private String id1, id2;
 
     @Autowired
     public CategoryServiceTest(CategoryService categoryService, CategoryRepository categoryRepository) {
         this.categoryService = categoryService;
         this.categoryRepository = categoryRepository;
+    }
+
+    @BeforeEach
+    void beforeEach() {
         id1 = categoryRepository.save(new Category(NAME1)).getId();
         id2 = categoryRepository.save(new Category(NAME2)).getId();
     }
