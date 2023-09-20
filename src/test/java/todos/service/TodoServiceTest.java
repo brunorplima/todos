@@ -19,9 +19,9 @@ class TodoServiceTest {
     private final TodoService todoService;
     private final TodoRepository todoRepository;
     private final String GIVEN = "given saved todos ";
-    private final String TITLE1 = "First todo", DESCRIPTION1 = "task for Monday";
-    private final String TITLE2 = "Second task", DESCRIPTION2 = "task for Tuesday";
-    private final String TITLE3 = "Third activity", DESCRIPTION3 = "task for Wednesday";
+    private final String READ_TITLE = "Read", READ_DESCRIPTION = "Read a book";
+    private final String GROCERIES_TITLE = "Groceries", GROCERIES_DESCRIPTION = "Buy groceries";
+    private final String STUDY_TITLE = "Study";
     private String todoId1, todoId2, todoId3;
 
     @Autowired
@@ -32,13 +32,13 @@ class TodoServiceTest {
 
     @BeforeEach
     public void beforeEach() {
-        Todo firstTodo = new Todo(TITLE1, DESCRIPTION1);
-        todoId1 = todoRepository.save(firstTodo).getId();
-        Todo secondTodo = new Todo(TITLE2, DESCRIPTION2);
-        secondTodo.setCompleted(true);
-        todoId2 = todoRepository.save(secondTodo).getId();
-        Todo thirdTodo = new Todo(TITLE3, DESCRIPTION3);
-        todoId3 = todoRepository.save(thirdTodo).getId();
+        Todo readTodo = new Todo(READ_TITLE, READ_DESCRIPTION);
+        todoId1 = todoRepository.save(readTodo).getId();
+        Todo groceriesTodo = new Todo(GROCERIES_TITLE, GROCERIES_DESCRIPTION);
+        groceriesTodo.setCompleted(true);
+        todoId2 = todoRepository.save(groceriesTodo).getId();
+        Todo studyTodo = new Todo(STUDY_TITLE, null);
+        todoId3 = todoRepository.save(studyTodo).getId();
     }
 
     @AfterEach
@@ -52,23 +52,23 @@ class TodoServiceTest {
     @Test
     void getAllTodosTest() {
         List<TodoDTO> todos = todoService.getAllTodos(null);
-        TodoDTO firstTodo = todos.get(0);
-        TodoDTO secondTodo = todos.get(1);
-        TodoDTO thirdTodo = todos.get(2);
+        TodoDTO studyTodo = todos.get(0);
+        TodoDTO groceriesTodo = todos.get(1);
+        TodoDTO readTodo = todos.get(2);
 
         assertEquals(3, todos.size());
 
-        assertEquals(TITLE1, firstTodo.getTitle());
-        assertEquals(DESCRIPTION1, firstTodo.getDescription());
-        assertFalse(firstTodo.isCompleted());
+        assertEquals(STUDY_TITLE, studyTodo.getTitle());
+        assertNull(studyTodo.getDescription());
+        assertFalse(studyTodo.isCompleted());
 
-        assertEquals(TITLE2, secondTodo.getTitle());
-        assertEquals(DESCRIPTION2, secondTodo.getDescription());
-        assertTrue(secondTodo.isCompleted());
+        assertEquals(GROCERIES_TITLE, groceriesTodo.getTitle());
+        assertEquals(GROCERIES_DESCRIPTION, groceriesTodo.getDescription());
+        assertTrue(groceriesTodo.isCompleted());
 
-        assertEquals(TITLE3, thirdTodo.getTitle());
-        assertEquals(DESCRIPTION3, thirdTodo.getDescription());
-        assertFalse(thirdTodo.isCompleted());
+        assertEquals(READ_TITLE, readTodo.getTitle());
+        assertEquals(READ_DESCRIPTION, readTodo.getDescription());
+        assertFalse(readTodo.isCompleted());
     }
 
     @DisplayName(GIVEN
@@ -76,22 +76,22 @@ class TodoServiceTest {
             + "then all matches should return")
     @Test
     void getAllTodosWithTitleTest() {
-        List<TodoDTO> todos = todoService.getAllTodos("ToDo");
-        TodoDTO firstTodo = todos.get(0);
+        List<TodoDTO> todos = todoService.getAllTodos("ReAd");
+        TodoDTO readTodo = todos.get(0);
 
         assertEquals(1, todos.size());
-        assertEquals(TITLE1, firstTodo.getTitle());
-        assertEquals(DESCRIPTION1, firstTodo.getDescription());
+        assertEquals(READ_TITLE, readTodo.getTitle());
+        assertEquals(READ_DESCRIPTION, readTodo.getDescription());
 
-        todos = todoService.getAllTodos("A");
-        TodoDTO secondTodo = todos.get(0);
-        TodoDTO thirdTodo = todos.get(1);
+        todos = todoService.getAllTodos("s");
+        TodoDTO studyTodo = todos.get(0);
+        TodoDTO groceriesTodo = todos.get(1);
 
         assertEquals(2, todos.size());
-        assertEquals(TITLE2, secondTodo.getTitle());
-        assertEquals(DESCRIPTION2, secondTodo.getDescription());
-        assertEquals(TITLE3, thirdTodo.getTitle());
-        assertEquals(DESCRIPTION3, thirdTodo.getDescription());
+        assertEquals(STUDY_TITLE, studyTodo.getTitle());
+        assertNull(studyTodo.getDescription());
+        assertEquals(GROCERIES_TITLE, groceriesTodo.getTitle());
+        assertEquals(GROCERIES_DESCRIPTION, groceriesTodo.getDescription());
 
         todos = todoService.getAllTodos("No matches");
 
@@ -109,13 +109,13 @@ class TodoServiceTest {
         TodoDTO todoNull = todoService.getTodo("not an id");
 
         assertEquals(todoId1, firstTodo.getId());
-        assertEquals(TITLE1, firstTodo.getTitle());
+        assertEquals(READ_TITLE, firstTodo.getTitle());
 
         assertEquals(todoId2, secondTodo.getId());
-        assertEquals(TITLE2, secondTodo.getTitle());
+        assertEquals(GROCERIES_TITLE, secondTodo.getTitle());
 
         assertEquals(todoId3, thirdTodo.getId());
-        assertEquals(TITLE3, thirdTodo.getTitle());
+        assertEquals(STUDY_TITLE, thirdTodo.getTitle());
 
         assertNull(todoNull);
     }
