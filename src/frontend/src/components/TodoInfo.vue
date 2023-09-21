@@ -6,7 +6,7 @@ const open = ref(false)
 </script>
 
 <template>
-  <div class="flex-grow-1 user-select-none" @click="open = !open">
+  <div id="todoInfo" class="flex-grow-1 user-select-none" @click="open = !open">
     <div id="todoTitle" class="d-flex gap-2">
       <h6 class="form-check-label card-title">{{ todo.title }}</h6>
       <font-awesome-icon v-if="open && todo.description" icon="chevron-up" size="2xs" class="chevron-icon" />
@@ -19,6 +19,9 @@ const open = ref(false)
 </template>
 
 <style scoped>
+#todoInfo {
+  flex: 1;
+}
 #todoTitle {
   cursor: pointer;
   transition: .3s;
