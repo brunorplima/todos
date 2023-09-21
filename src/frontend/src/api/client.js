@@ -19,7 +19,7 @@ export default {
         return await res.json()
     },
     put: async (url, body) => {
-        const options = getOptions('PUT', JSON.stringify(body))
+        const options = body ? getOptions('PUT', JSON.stringify(body)) : getOptions('PUT')
         const res = await fetch(url, options)
         return await res.json()
     },
