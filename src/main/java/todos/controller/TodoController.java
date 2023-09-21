@@ -43,6 +43,18 @@ public class TodoController {
         else return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @PutMapping("/{id}/check")
+    public ResponseEntity<TodoDTO> checkCompleted(@PathVariable String id) {
+        TodoDTO todo = todoService.toggleCompleted(id, true);
+        return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/uncheck")
+    public ResponseEntity<TodoDTO> uncheckCompleted(@PathVariable String id) {
+        TodoDTO todo = todoService.toggleCompleted(id, false);
+        return new ResponseEntity<>(todo, HttpStatus.OK);
+    }
+
     @DeleteMapping
     public ResponseEntity<HttpStatus> deleteAllTodos() {
         todoService.deleteAllTodos();

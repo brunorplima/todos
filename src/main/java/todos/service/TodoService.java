@@ -49,6 +49,15 @@ public class TodoService {
         return convertToDTO(todoRepository.save(todo));
     }
 
+    public TodoDTO toggleCompleted(String id, boolean completed) {
+        Todo todo = todoRepository.findById(id).orElse(null);
+        if (todo == null) return null;
+        else if (todo.isCompleted() == completed) return convertToDTO(todo);
+        todo.setCompleted(completed);
+        Todo updatedTodo = todoRepository.save(todo);
+        return convertToDTO(updatedTodo);
+    }
+
     public void deleteAllTodos() {
         todoRepository.deleteAll();
     }
