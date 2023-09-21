@@ -22,7 +22,7 @@ class TodoServiceTest {
     private final String READ_TITLE = "Read", READ_DESCRIPTION = "Read a book";
     private final String GROCERIES_TITLE = "Groceries", GROCERIES_DESCRIPTION = "Buy groceries";
     private final String STUDY_TITLE = "Study";
-    private String todoId1, todoId2, todoId3;
+    private String readTodoId, groceriesTodoId, studyTodoId;
 
     @Autowired
     public TodoServiceTest(TodoService todoService, TodoRepository todoRepository) {
@@ -33,12 +33,12 @@ class TodoServiceTest {
     @BeforeEach
     public void beforeEach() {
         Todo readTodo = new Todo(READ_TITLE, READ_DESCRIPTION);
-        todoId1 = todoRepository.save(readTodo).getId();
+        readTodoId = todoRepository.save(readTodo).getId();
         Todo groceriesTodo = new Todo(GROCERIES_TITLE, GROCERIES_DESCRIPTION);
         groceriesTodo.setCompleted(true);
-        todoId2 = todoRepository.save(groceriesTodo).getId();
+        groceriesTodoId = todoRepository.save(groceriesTodo).getId();
         Todo studyTodo = new Todo(STUDY_TITLE, null);
-        todoId3 = todoRepository.save(studyTodo).getId();
+        studyTodoId = todoRepository.save(studyTodo).getId();
     }
 
     @AfterEach
@@ -103,19 +103,19 @@ class TodoServiceTest {
         + "then its data should return or null if not existent")
     @Test
     void getTodoTest() {
-        TodoDTO firstTodo = todoService.getTodo(todoId1);
-        TodoDTO secondTodo = todoService.getTodo(todoId2);
-        TodoDTO thirdTodo = todoService.getTodo(todoId3);
+        TodoDTO readTodo = todoService.getTodo(readTodoId);
+        TodoDTO groceriesTodo = todoService.getTodo(groceriesTodoId);
+        TodoDTO studyTodo = todoService.getTodo(studyTodoId);
         TodoDTO todoNull = todoService.getTodo("not an id");
 
-        assertEquals(todoId1, firstTodo.getId());
-        assertEquals(READ_TITLE, firstTodo.getTitle());
+        assertEquals(readTodoId, readTodo.getId());
+        assertEquals(READ_TITLE, readTodo.getTitle());
 
-        assertEquals(todoId2, secondTodo.getId());
-        assertEquals(GROCERIES_TITLE, secondTodo.getTitle());
+        assertEquals(groceriesTodoId, groceriesTodo.getId());
+        assertEquals(GROCERIES_TITLE, groceriesTodo.getTitle());
 
-        assertEquals(todoId3, thirdTodo.getId());
-        assertEquals(STUDY_TITLE, thirdTodo.getTitle());
+        assertEquals(studyTodoId, studyTodo.getId());
+        assertEquals(STUDY_TITLE, studyTodo.getTitle());
 
         assertNull(todoNull);
     }
@@ -149,10 +149,32 @@ class TodoServiceTest {
 
         assertNull(todo);
 
-        todo = todoService.updateTodo(todoId1, body);
+        todo = todoService.updateTodo(readTodoId, body);
 
         assertEquals(title, todo.getTitle());
         assertEquals(description, todo.getDescription());
+    }
+
+    @DisplayName(GIVEN
+        + "when toggling a todo completed "
+        + "then the todo should be saved and returned")
+    @Test
+    void toggleCompletedTest() {
+        TodoDTO readTodo = todoService.getTodo(readTodoId);
+        TodoDTO groceriesTodo = todoService.getTodo(groceriesTodoId);
+        TodoDTO studyTodo = todoService.getTodo(studyTodoId);
+
+        assertFalse(readTodo.isCompleted());
+        assertTrue(groceriesTodo.isCompleted());
+        assertFalse(studyTodo.isCompleted());
+
+        readTodo = todoService.toggleCompleted(readTodo.getId(), true);
+        groceriesTodo = todoService.toggleCompleted(groceriesTodo.getId(), false);
+        studyTodo = todoService.toggleCompleted(studyTodo.getId(), true);
+
+        assertTrue(readTodo.isCompleted());
+        assertFalse(groceriesTodo.isCompleted());
+        assertTrue(studyTodo.isCompleted());
     }
 
     @DisplayName(GIVEN
@@ -181,12 +203,12 @@ class TodoServiceTest {
         assertFalse(deleted);
         assertEquals(3, count);
 
-        deleted = todoService.deleteTodo(todoId1);
+        deleted = todoService.deleteTodo(readTodoId);
         count = todoRepository.count();
         assertTrue(deleted);
         assertEquals(2, count);
 
-        TodoDTO deletedTodo = todoService.getTodo(todoId1);
+        TodoDTO deletedTodo = todoService.getTodo(readTodoId);
         assertNull(deletedTodo);
     }
 }
