@@ -2,12 +2,14 @@
 import { ref } from "vue";
 import TodoInfo from "./TodoInfo.vue";
 import TodoEdit from "./TodoEdit.vue";
-import { deleteTodo, updateTodo } from "../api/todos.js";
+import { deleteTodo, toggleTodoCompleted, updateTodo } from "../api/todos.js";
 import TodoCardControllers from "./TodoCardControllers.vue";
+import debounce from "../utils/debounce.js";
 
 const { todo } = defineProps(['todo'])
 const emits = defineEmits(['updateTodo', 'deleteTodo'])
 const updatingTodo = ref(null)
+const debouncedToggleCompleted = debounce((id, completed) => toggleTodoCompleted(id, completed), 500)
 
 async function update() {
   try {
@@ -40,7 +42,14 @@ async function removeTodo(id) {
 <template>
   <div class="card-body d-flex gap-2">
     <div class="">
-      <input v-if="!updatingTodo" class="form-check-input" type="checkbox" :id="`todo-${todo.id}`">
+      <input
+        v-if="!updatingTodo"
+        v-model="todo.completed"
+        class="form-check-input"
+        type="checkbox"
+        :id="`todo-${todo.id}`"
+        @input="debouncedToggleCompleted(todo.id, todo.completed)"
+      >
     </div>
 
     <TodoInfo v-if="!updatingTodo" :todo="todo" />
