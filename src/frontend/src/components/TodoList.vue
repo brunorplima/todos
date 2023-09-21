@@ -28,7 +28,7 @@ function applyDeleteChangesToTodos(id) {
 
 <template>
   <div id="todos" class="d-flex flex-column align-items-sm-center">
-    <ul id="todo-list" class="list-unstyled w-100 mb-5">
+    <ul class="max-width list-unstyled w-100 mb-5">
       <li
         v-for="(todo, index) in notCompletedTodos"
         :key="todo.id"
@@ -43,7 +43,7 @@ function applyDeleteChangesToTodos(id) {
       </li>
     </ul>
 
-    <div v-if="completedTodos.length">
+    <div v-if="completedTodos.length" class="max-width w-100">
       <div class="d-flex justify-content-between">
         <h5>Completed</h5>
         <div
@@ -53,7 +53,7 @@ function applyDeleteChangesToTodos(id) {
           {{ showCompleted ? 'hide' : 'show' }}
         </div>
       </div>
-      <ul v-if="showCompleted" id="todo-list" class="list-unstyled w-100">
+      <ul v-if="showCompleted" class="list-unstyled w-100">
         <li
           v-for="(todo, index) in completedTodos"
           :key="todo.id"
@@ -75,7 +75,7 @@ function applyDeleteChangesToTodos(id) {
 #todos {
   margin: 0 20px;
 }
-#todo-list {
+.max-width {
   max-width: 700px;
 }
 </style>
